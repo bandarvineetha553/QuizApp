@@ -1,33 +1,42 @@
+// src/features/results/resultsSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { QuizParams } from '../../utils/api';
 
-interface ResultsData {
-  score: number;
-  total: number;
-  details: Array<{
-    id: string;
-    question: string;
-    options: string[];
-    selected: number;
-    correctIndex: number;
-    correct: boolean;
-  }>;
-  meta: any;
+export interface ResultDetail {
+  id: string;
+  question: string;
+  options: string[];
+  selected: number;
+  correctIndex: number;
+  correct: boolean;
 }
 
-interface ResultsState { data: ResultsData | null; }
+export interface ResultsData {
+  score: number;
+  total: number;
+  details: ResultDetail[];
+  meta: QuizParams;
+}
+
+const initialState: ResultsData = {
+  score: 0,
+  total: 0,
+  details: [],
+  meta: { category: '', difficulty: 'easy', amount: 5 },
+};
 
 const slice = createSlice({
   name: 'results',
-  initialState: { data: null } as ResultsState,
+  initialState,
   reducers: {
     showResults(state, action: PayloadAction<ResultsData>) {
-      state.data = action.payload;
+      state.score   = action.payload.score;
+      state.total   = action.payload.total;
+      state.details = action.payload.details;
+      state.meta    = action.payload.meta;
     },
-    resetResults(state) {
-      state.data = null;
-    }
-  }
+  },
 });
 
-export const { showResults, resetResults } = slice.actions;
+export const { showResults } = slice.actions;
 export default slice.reducer;

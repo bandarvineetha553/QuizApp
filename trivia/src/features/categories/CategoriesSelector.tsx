@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCategories } from './categoriesSlice';
-import { startQuiz }      from '../quiz/quizSlice';
+import { startQuiz, loadQuestions }      from '../quiz/quizSlice';
 import type { RootState, AppDispatch } from '../../app/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +13,9 @@ export default function CategoriesSelector() {
   const [difficulty, setDifficulty] = useState<'easy'|'medium'|'hard'>('easy');
   const [amount, setAmount]         = useState(5);
    const handleStart = () => {
-    dispatch(startQuiz({ category, difficulty, amount }));
+    const params = { category, difficulty, amount };
+    dispatch(startQuiz(params));
+    dispatch(loadQuestions(params));
     navigate('/quiz');
   };
   useEffect(() => { dispatch(loadCategories()); }, [dispatch]);
